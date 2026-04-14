@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <title>Grab-It | High Quality Thumbnail Downloader</title>
+    <style>
+        body { font-family: sans-serif; background: #0f0f0f; color: white; text-align: center; padding: 40px; }
+        .box { background: #1a1a1a; padding: 30px; border-radius: 12px; display: inline-block; border: 1px solid #333; }
+        input { padding: 12px; width: 300px; border-radius: 5px; border: none; outline: none; }
+        button { padding: 12px 20px; background: #ff0000; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; margin-left: 10px; }
+        .result { margin-top: 20px; display: none; }
+        img { width: 100%; max-width: 500px; border-radius: 8px; margin-bottom: 10px; }
+        a { color: #00d2ff; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="box">
+    <h2>YouTube Thumbnail Downloader</h2>
+    <p>Apna video link yahan paste karein:</p>
+    <input type="text" id="ytLink" placeholder="https://www.youtube.com/watch?v=...">
+    <button onclick="getThumbnail()">Get Thumbnail</button>
+
+    <div id="result" class="result">
+        <img id="thumbPreview" src="" alt="Thumbnail Preview"><br>
+        <a id="downloadLink" href="#" target="_blank">Download HD Image</a>
+    </div>
+</div>
+
+<script>
+    function getThumbnail() {
+        let url = document.getElementById('ytLink').value;
+        let videoID = "";
+
+        if(url.includes("v=")) {
+            videoID = url.split("v=")[1].substring(0, 11);
+        } else if(url.includes("be/")) {
+            videoID = url.split("be/")[1].substring(0, 11);
+        }
+
+        if(videoID) {
+            let thumbUrl = `https://img.youtube.com/vi/${videoID}/maxresdefault.jpg`;
+            document.getElementById('thumbPreview').src = thumbUrl;
+            document.getElementById('downloadLink').href = thumbUrl;
+            document.getElementById('result').style.display = "block";
+        } else {
+            alert("Bhai, sahi YouTube link toh daalo!");
+        }
+    }
+</script>
+
+</body>
+</html>
