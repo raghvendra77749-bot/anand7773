@@ -1,53 +1,159 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Grab-It | High Quality Thumbnail Downloader</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAGHAV EDITZ | REEL SAVER</title>
     <style>
-        body { font-family: sans-serif; background: #0f0f0f; color: white; text-align: center; padding: 40px; }
-        .box { background: #1a1a1a; padding: 30px; border-radius: 12px; display: inline-block; border: 1px solid #333; }
-        input { padding: 12px; width: 300px; border-radius: 5px; border: none; outline: none; }
-        button { padding: 12px 20px; background: #ff0000; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; margin-left: 10px; }
-        .result { margin-top: 20px; display: none; }
-        img { width: 100%; max-width: 500px; border-radius: 8px; margin-bottom: 10px; }
-        a { color: #00d2ff; text-decoration: none; font-weight: bold; }
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;600;900&display=swap');
+
+        body {
+            margin: 0;
+            background: #000;
+            color: #fff;
+            font-family: 'Outfit', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            padding: 40px;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            width: 90%;
+            max-width: 450px;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+
+        h1 {
+            font-weight: 900;
+            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 30px;
+            letter-spacing: 1px;
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+        }
+
+        input {
+            width: 100%;
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid #333;
+            background: #111;
+            color: #fff;
+            box-sizing: border-box;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        input:focus {
+            border-color: #bc1888;
+            box-shadow: 0 0 15px rgba(188, 24, 136, 0.3);
+        }
+
+        .download-btn {
+            background: linear-gradient(45deg, #f09433, #bc1888);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+
+        .download-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 5px 20px rgba(188, 24, 136, 0.4);
+        }
+
+        #result {
+            margin-top: 30px;
+            display: none;
+        }
+
+        .preview-img {
+            width: 100%;
+            border-radius: 15px;
+            margin-bottom: 15px;
+        }
+
+        .loader {
+            display: none;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #bc1888;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
 
-<div class="box">
-    <h2>YouTube Thumbnail Downloader</h2>
-    <p>Apna video link yahan paste karein:</p>
-    <input type="text" id="ytLink" placeholder="https://www.youtube.com/watch?v=...">
-    <button onclick="getThumbnail()">Get Thumbnail</button>
+    <div class="container">
+        <h1>REEL DOWNLOADER</h1>
+        <div class="input-group">
+            <input type="text" id="reelLink" placeholder="Paste Instagram Reel Link here...">
+        </div>
+        <button class="download-btn" onclick="fetchReel()">GET DOWNLOAD LINK</button>
+        
+        <div class="loader" id="loader"></div>
 
-    <div id="result" class="result">
-        <img id="thumbPreview" src="" alt="Thumbnail Preview"><br>
-        <a id="downloadLink" href="#" target="_blank">Download HD Image</a>
+        <div id="result">
+            <p>Video Ready!</p>
+            <a id="downloadLink" href="#" target="_blank">
+                <button class="download-btn" style="background: #222; border: 1px solid #bc1888;">DOWNLOAD VIDEO</button>
+            </a>
+        </div>
     </div>
-</div>
 
-<script>
-    function getThumbnail() {
-        let url = document.getElementById('ytLink').value;
-        let videoID = "";
+    <script>
+        async function fetchReel() {
+            const link = document.getElementById('reelLink').value;
+            const loader = document.getElementById('loader');
+            const resultDiv = document.getElementById('result');
 
-        if(url.includes("v=")) {
-            videoID = url.split("v=")[1].substring(0, 11);
-        } else if(url.includes("be/")) {
-            videoID = url.split("be/")[1].substring(0, 11);
+            if (!link.includes("instagram.com")) {
+                alert("Please paste a valid Instagram link!");
+                return;
+            }
+
+            loader.style.display = 'block';
+            resultDiv.style.display = 'none';
+
+            try {
+                // Hum yahan ek public API use kar rahe hain (Example purposes only)
+                // Real production ke liye aap RapidAPI ya kisi paid service ka use karein
+                const response = await fetch(`https://api.bhawanigarg.com/social/instagram/?url=${link}`);
+                const data = await response.json();
+
+                if (data.status && data.data.main_url) {
+                    document.getElementById('downloadLink').href = data.data.main_url;
+                    resultDiv.style.display = 'block';
+                } else {
+                    alert("Unable to fetch video. Try another link.");
+                }
+            } catch (error) {
+                alert("Error connecting to server!");
+            } finally {
+                loader.style.display = 'none';
+            }
         }
-
-        if(videoID) {
-            let thumbUrl = `https://img.youtube.com/vi/${videoID}/maxresdefault.jpg`;
-            document.getElementById('thumbPreview').src = thumbUrl;
-            document.getElementById('downloadLink').href = thumbUrl;
-            document.getElementById('result').style.display = "block";
-        } else {
-            alert("Bhai, sahi YouTube link toh daalo!");
-        }
-    }
-</script>
-
+    </script>
 </body>
 </html>
